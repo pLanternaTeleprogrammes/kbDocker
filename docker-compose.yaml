@@ -3,27 +3,27 @@ services:
   # PHP service
   app:
     build: ./docker/php/.
-    container_name: kb-php
+    container_name: kcb-php
     working_dir: /var/www/site
     volumes:
       - ./site:/var/www/site
     networks:
-      - kb-network
+      - kcb-network
     depends_on:
       - mysql
 
   # Nginx service
   nginx:
     image: nginx:alpine
-    container_name: kb-nginx
+    container_name: kcb-nginx
     working_dir: /var/www/site
     ports:
-      - 8001:80
+      - 8002:80
     volumes:
       - ./site:/var/www/site
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
     networks:
-      - kb-network
+      - kcb-network
     depends_on:
       - app
       - mysql
@@ -31,7 +31,7 @@ services:
   # Mysql service
   mysql:
     image: mysql:5.7.22
-    container_name: kb-mysql
+    container_name: kcb-mysql
     restart: always
     environment:
       - MYSQL_DATABASE=koalaBackend
@@ -42,9 +42,9 @@ services:
     volumes:
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
-      - 3307:3306
+      - 3308:3306
     networks:
-      - kb-network
+      - kcb-network
 
   adminer:
       image: adminer
@@ -52,7 +52,7 @@ services:
       links:
         - mysql
       ports:
-        - 8083:80
+        - 8091:80
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -63,8 +63,8 @@ services:
       PMA_HOST: mysql
       PMA_USER: kb
       PMA_PASSWORD: kbpass
-      ports: 8082:80
+      ports: 8090:80
 
 networks:
-  kb-network:
+  kcb-network:
     driver: bridge
